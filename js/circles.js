@@ -16,6 +16,7 @@ module.exports =
     drawCircles() {
       this.circles = this.svgCanvas.selectAll("circle")
                                       .data(this.data);
+
       this.circles
           .enter()
           .append("circle");
@@ -26,17 +27,24 @@ module.exports =
       this.circles
           .attr("cx", d => { return d.cx;})
           .attr("cy", d => { return d.cy;})
-          .attr("r", d => { return d.r; });
+          .attr("r", d => { return d.r; })
+          .on("mouseenter", (e) => {
+            console.log(e);
+              setTimeout(this.updateCircles.bind(this,e), 300);
+          });
 
     this.circles
       .exit()
       .remove();
     }
 
-    updateData(oldData) {
+    updateCircles(oldData) {
       //remove old data, make and add new data
       let index = oldData.i;
-      this.data = this.data.slice(0,index) + Util.getLittleCircles + this.data.slice(index + 1, this.data.length);
+      let nextI = this.data.length - 1;
+      this.data = this.data.slice(0,index)
+                      .concat(this.data.slice(index + 1, this.data.length))
+                      .concat(Util.getLittleCircles(nextI, oldData.r, oldData.cx, oldData.cy));
       this.drawCircles();
     }
 

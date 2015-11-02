@@ -9312,6 +9312,7 @@
 
 	    drawCircles() {
 	      this.circles = this.svgCanvas.selectAll("circle").data(this.data);
+
 	      this.circles.enter().append("circle");
 
 	      this.circles.select("circle");
@@ -9322,15 +9323,19 @@
 	        return d.cy;
 	      }).attr("r", d => {
 	        return d.r;
+	      }).on("mouseenter", e => {
+	        console.log(e);
+	        setTimeout(this.updateCircles.bind(this, e), 300);
 	      });
 
 	      this.circles.exit().remove();
 	    }
 
-	    updateData(oldData) {
+	    updateCircles(oldData) {
 	      //remove old data, make and add new data
 	      let index = oldData.i;
-	      this.data = this.data.slice(0, index) + Util.getLittleCircles + this.data.slice(index + 1, this.data.length);
+	      let nextI = this.data.length - 1;
+	      this.data = this.data.slice(0, index).concat(this.data.slice(index + 1, this.data.length)).concat(Util.getLittleCircles(nextI, oldData.r, oldData.cx, oldData.cy));
 	      this.drawCircles();
 	    }
 
@@ -9350,16 +9355,18 @@
 	  "use strict";
 
 	  const Util = {
-	    getLittleCircles(radius, cx, cy) {
+	    getLittleCircles(index, radius, cx, cy) {
 	      /*
+	       * i is this.data.length
 	       * returns the coordinates of four circles
 	       * and their radiuses, which fit inside the
 	       * bigger circle outline by coordinates
 	       * */
 	      let newR = radius / 2;
 	      const compArr = [[-1, 1], [1, 1], [1, -1], [-1, -1]];
-	      let newCoords = compArr.map(comps => {
-	        return { "r": newR,
+	      let newCoords = compArr.map((comps, i) => {
+	        return { "i": index + i,
+	          "r": newR,
 	          "cx": comps[0] * newR + cx,
 	          "cy": comps[1] * newR + cy };
 	      });
@@ -9371,7 +9378,7 @@
 	       * margins {top: ---, left: ---}
 	       **/
 	      if (width === height) {
-	        return [{ i: 0, "r": width / 2, "cx": width / 2 + margins.left, "cy": height / 2 + margins.top }];
+	        return [{ "i": 0, "r": width / 2, "cx": width / 2 + margins.left, "cy": height / 2 + margins.top }];
 	      }
 	    },
 
