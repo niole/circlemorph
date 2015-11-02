@@ -1,12 +1,13 @@
 /*here it is*/
 const d3 = require('d3');
 const $ = require('jquery');
-const Util = require('./Util');
+const Circles = require('./circles');
 
 $(document).ready( () => {
 (() => {
   "use strict";
   console.log('ready');
-  console.log(Util.getCircleRadii);
+  const circles = new Circles({top: 0, left: 0});
+  circles.drawCircles();
 })()
 });
