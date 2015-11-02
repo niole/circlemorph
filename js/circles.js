@@ -40,11 +40,14 @@ module.exports =
 
     updateCircles(oldData) {
       //remove old data, make and add new data
+      //break when correct object is found
+
       for (let index=0; index<this.data.length; index ++) {
         if (Util.objectsEqual(this.data[index], oldData)) {
           this.data = this.data.slice(0,index)
                         .concat(this.data.slice(index + 1, this.data.length))
                         .concat(Util.getLittleCircles(oldData.depth, oldData.r, oldData.cx, oldData.cy));
+          break;
         }
       }
       this.drawCircles();
