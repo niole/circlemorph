@@ -54,6 +54,16 @@
 	/*here it is*/
 	const d3 = __webpack_require__(2);
 	const $ = __webpack_require__(3);
+	const Util = __webpack_require__(4);
+
+	$(document).ready(() => {
+	  (() => {
+	    "use strict";
+
+	    console.log('ready');
+	    console.log(Util.getCircleRadii);
+	  })();
+	});
 
 /***/ },
 /* 2 */
@@ -9280,6 +9290,33 @@
 
 	}));
 
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	module.exports = (() => {
+	  "use strict";
+
+	  const Util = {
+	    getCircleRadii(radius, cx, cy) {
+	      /*
+	       * returns the coordinates of four circles
+	       * and their radiuses, which fit inside the
+	       * bigger circle outline by coordinates
+	       * */
+	      let newR = radius / 2;
+	      const compArr = [[-1, 1], [1, 1], [1, -1], [-1, -1]];
+	      let newCoords = compArr.map(comps => {
+	        return { "r": newR,
+	          "cx": comps[0] * newR + cx,
+	          "cy": comps[1] * newR + cy };
+	      });
+	      return newCoords;
+	    }
+	  };
+	  return Util;
+	})();
 
 /***/ }
 /******/ ]);
