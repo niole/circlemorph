@@ -5,18 +5,16 @@ module.exports =
 (() => {
   "use strict";
   const Util =  {
-                  getLittleCircles(index, radius, cx, cy) {
+                  getLittleCircles(radius, cx, cy) {
                     /*
-                     * i is this.data.length
                      * returns the coordinates of four circles
                      * and their radiuses, which fit inside the
                      * bigger circle outline by coordinates
                      * */
                     let newR = radius/2;
                     const compArr = [[-1, 1], [1,1], [1,-1],[-1,-1]];
-                    let newCoords = compArr.map( (comps, i) => {
-                                      return { "i": index + i,
-                                               "r": newR,
+                    let newCoords = compArr.map( comps => {
+                                      return { "r": newR,
                                                "cx": (comps[0]*newR) + cx,
                                                "cy": (comps[1]*newR) + cy };
                                     });
@@ -36,6 +34,15 @@ module.exports =
                     return d3.select("body").append("svg")
                                       .attr("width", width)
                                       .attr("height", height);
+                  },
+
+                  objectsEqual(o1, o2) {
+                    for (var k in o1) {
+                      if (!(k in o2) || o2[k] !== o1[k]) {
+                        return false;
+                      }
+                    }
+                    return true;
                   }
   };
   return Util;

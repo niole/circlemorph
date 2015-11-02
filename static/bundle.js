@@ -9325,7 +9325,7 @@
 	        return d.r;
 	      }).on("mouseenter", e => {
 	        console.log(e);
-	        setTimeout(this.updateCircles.bind(this, e), 300);
+	        setTimeout(this.updateCircles.bind(this, e), 100);
 	      });
 
 	      this.circles.exit().remove();
@@ -9333,9 +9333,11 @@
 
 	    updateCircles(oldData) {
 	      //remove old data, make and add new data
-	      let index = oldData.i;
-	      let nextI = this.data.length - 1;
-	      this.data = this.data.slice(0, index).concat(this.data.slice(index + 1, this.data.length)).concat(Util.getLittleCircles(nextI, oldData.r, oldData.cx, oldData.cy));
+	      for (let index = 0; index < this.data.length; index++) {
+	        if (Util.objectsEqual(this.data[index], oldData)) {
+	          this.data = this.data.slice(0, index).concat(this.data.slice(index + 1, this.data.length)).concat(Util.getLittleCircles(oldData.r, oldData.cx, oldData.cy));
+	        }
+	      }
 	      this.drawCircles();
 	    }
 
@@ -9355,18 +9357,16 @@
 	  "use strict";
 
 	  const Util = {
-	    getLittleCircles(index, radius, cx, cy) {
+	    getLittleCircles(radius, cx, cy) {
 	      /*
-	       * i is this.data.length
 	       * returns the coordinates of four circles
 	       * and their radiuses, which fit inside the
 	       * bigger circle outline by coordinates
 	       * */
 	      let newR = radius / 2;
 	      const compArr = [[-1, 1], [1, 1], [1, -1], [-1, -1]];
-	      let newCoords = compArr.map((comps, i) => {
-	        return { "i": index + i,
-	          "r": newR,
+	      let newCoords = compArr.map(comps => {
+	        return { "r": newR,
 	          "cx": comps[0] * newR + cx,
 	          "cy": comps[1] * newR + cy };
 	      });
@@ -9384,6 +9384,15 @@
 
 	    getCanvas(width, height) {
 	      return d3.select("body").append("svg").attr("width", width).attr("height", height);
+	    },
+
+	    objectsEqual(o1, o2) {
+	      for (var k in o1) {
+	        if (!(k in o2) || o2[k] !== o1[k]) {
+	          return false;
+	        }
+	      }
+	      return true;
 	    }
 	  };
 	  return Util;

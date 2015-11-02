@@ -29,8 +29,7 @@ module.exports =
           .attr("cy", d => { return d.cy;})
           .attr("r", d => { return d.r; })
           .on("mouseenter", (e) => {
-            console.log(e);
-              setTimeout(this.updateCircles.bind(this,e), 300);
+              setTimeout(this.updateCircles.bind(this,e), 100);
           });
 
     this.circles
@@ -40,11 +39,13 @@ module.exports =
 
     updateCircles(oldData) {
       //remove old data, make and add new data
-      let index = oldData.i;
-      let nextI = this.data.length - 1;
-      this.data = this.data.slice(0,index)
-                      .concat(this.data.slice(index + 1, this.data.length))
-                      .concat(Util.getLittleCircles(nextI, oldData.r, oldData.cx, oldData.cy));
+      for (let index=0; index<this.data.length; index ++) {
+        if (Util.objectsEqual(this.data[index], oldData)) {
+          this.data = this.data.slice(0,index)
+                        .concat(this.data.slice(index + 1, this.data.length))
+                        .concat(Util.getLittleCircles(oldData.r, oldData.cx, oldData.cy));
+        }
+      }
       this.drawCircles();
     }
 
