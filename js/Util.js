@@ -5,7 +5,17 @@ module.exports =
 (() => {
   "use strict";
   const Util =  {
-                  getLittleCircles(radius, cx, cy) {
+                  getColor(depth) {
+                    const rainbow =
+                                  ["#FF0000",
+                                  "#FF7F00",
+                                  "#FFFF00",
+                                  "#00FF00",
+                                  "#6600FF"];
+                    return rainbow[depth%rainbow.length];
+                  },
+
+                  getLittleCircles(depth, radius, cx, cy) {
                     /*
                      * returns the coordinates of four circles
                      * and their radiuses, which fit inside the
@@ -14,7 +24,8 @@ module.exports =
                     let newR = radius/2;
                     const compArr = [[-1, 1], [1,1], [1,-1],[-1,-1]];
                     let newCoords = compArr.map( comps => {
-                                      return { "r": newR,
+                                      return { "depth": depth + 1,
+                                               "r": newR,
                                                "cx": (comps[0]*newR) + cx,
                                                "cy": (comps[1]*newR) + cy };
                                     });
@@ -26,7 +37,7 @@ module.exports =
                      * margins {top: ---, left: ---}
                      **/
                     if (width === height) {
-                      return [{"i": 0, "r": width/2, "cx": width/2 + margins.left, "cy": height/2 + margins.top }];
+                      return [{"depth": -1, "r": width/2, "cx": width/2 + margins.left, "cy": height/2 + margins.top }];
                     }
                   },
 

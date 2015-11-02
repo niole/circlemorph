@@ -25,6 +25,7 @@ module.exports =
         .select("circle");
 
       this.circles
+          .style("fill", d => { return Util.getColor(d.depth)})
           .attr("cx", d => { return d.cx;})
           .attr("cy", d => { return d.cy;})
           .attr("r", d => { return d.r; })
@@ -43,7 +44,7 @@ module.exports =
         if (Util.objectsEqual(this.data[index], oldData)) {
           this.data = this.data.slice(0,index)
                         .concat(this.data.slice(index + 1, this.data.length))
-                        .concat(Util.getLittleCircles(oldData.r, oldData.cx, oldData.cy));
+                        .concat(Util.getLittleCircles(oldData.depth, oldData.r, oldData.cx, oldData.cy));
         }
       }
       this.drawCircles();

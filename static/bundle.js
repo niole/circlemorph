@@ -9317,14 +9317,15 @@
 
 	      this.circles.select("circle");
 
-	      this.circles.attr("cx", d => {
+	      this.circles.style("fill", d => {
+	        return Util.getColor(d.depth);
+	      }).attr("cx", d => {
 	        return d.cx;
 	      }).attr("cy", d => {
 	        return d.cy;
 	      }).attr("r", d => {
 	        return d.r;
 	      }).on("mouseenter", e => {
-	        console.log(e);
 	        setTimeout(this.updateCircles.bind(this, e), 100);
 	      });
 
@@ -9335,7 +9336,7 @@
 	      //remove old data, make and add new data
 	      for (let index = 0; index < this.data.length; index++) {
 	        if (Util.objectsEqual(this.data[index], oldData)) {
-	          this.data = this.data.slice(0, index).concat(this.data.slice(index + 1, this.data.length)).concat(Util.getLittleCircles(oldData.r, oldData.cx, oldData.cy));
+	          this.data = this.data.slice(0, index).concat(this.data.slice(index + 1, this.data.length)).concat(Util.getLittleCircles(oldData.depth, oldData.r, oldData.cx, oldData.cy));
 	        }
 	      }
 	      this.drawCircles();
@@ -9357,7 +9358,15 @@
 	  "use strict";
 
 	  const Util = {
-	    getLittleCircles(radius, cx, cy) {
+	    getColor(depth) {
+	      const rainbow = ["#FF0000", "#FF7F00", "#FFFF00", "#00FF00",
+	      //"#0000FF",
+	      "#6600FF"];
+	      //"#8B00FF"];
+	      return rainbow[depth % rainbow.length];
+	    },
+
+	    getLittleCircles(depth, radius, cx, cy) {
 	      /*
 	       * returns the coordinates of four circles
 	       * and their radiuses, which fit inside the
@@ -9366,7 +9375,8 @@
 	      let newR = radius / 2;
 	      const compArr = [[-1, 1], [1, 1], [1, -1], [-1, -1]];
 	      let newCoords = compArr.map(comps => {
-	        return { "r": newR,
+	        return { "depth": depth + 1,
+	          "r": newR,
 	          "cx": comps[0] * newR + cx,
 	          "cy": comps[1] * newR + cy };
 	      });
@@ -9378,7 +9388,7 @@
 	       * margins {top: ---, left: ---}
 	       **/
 	      if (width === height) {
-	        return [{ "i": 0, "r": width / 2, "cx": width / 2 + margins.left, "cy": height / 2 + margins.top }];
+	        return [{ "depth": -1, "r": width / 2, "cx": width / 2 + margins.left, "cy": height / 2 + margins.top }];
 	      }
 	    },
 
